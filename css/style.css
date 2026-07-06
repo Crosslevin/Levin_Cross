@@ -73,3 +73,33 @@ footer{
     padding:40px;
     background:#111827;
 }
+.hero{
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    color:#fff;
+    border-radius:20px;
+    margin:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+.grid div{
+    transition:.3s;
+    cursor:pointer;
+}
+
+.grid div:hover{
+    transform:translateY(-10px);
+    box-shadow:0 15px 35px rgba(37,99,235,.4);
+}
+
+button:hover{
+    background:#1d4ed8;
+    transform:scale(1.05);
+}
+
+nav a{
+    transition:.3s;
+}
+
+nav a:hover{
+    color:#60a5fa;
+}
