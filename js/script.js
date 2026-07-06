@@ -82,7 +82,32 @@ window.addBlog = async function () {
 
 // Show Blogs
 const blogContainer = document.getElementById("blogContainer");
+window.publishBlog = async function () {
+  const title = document.getElementById("blogTitle").value;
+  const desc = document.getElementById("blogDesc").value;
 
+  if (!title || !desc) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "blogs"), {
+      title: title,
+      desc: desc,
+      time: Date.now()
+    });
+
+    alert("Blog Published Successfully!");
+
+    document.getElementById("blogTitle").value = "";
+    document.getElementById("blogDesc").value = "";
+
+  } catch (error) {
+    console.error(error);
+    alert("Error publishing blog");
+  }
+};
 if (blogContainer) {
   onSnapshot(collection(db, "blogs"), (snapshot) => {
     blogContainer.innerHTML = "";
