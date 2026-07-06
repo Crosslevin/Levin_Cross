@@ -77,24 +77,19 @@ onAuthStateChanged(auth, (user) => {
 });
 
 /* ================= BLOG PUBLISH ================= */
-window.publishBlog = async function () {
-  const title = document.getElementById("blogTitle")?.value;
-  const desc = document.getElementById("blogDesc")?.value;
-  const image = document.getElementById("blogImage")?.value;
-
-  if (!title || !desc) {
-    alert("Fill all fields");
-    return;
-  }
+window.generateAI = async function () {
+  const title = "AI Generated Blog Title " + Date.now();
+  const desc = "This is AI generated content for Levin Cross blog system.";
 
   await addDoc(collection(db, "blogs"), {
     title,
     desc,
-    image: image || "",
-    time: Date.now()
+    time: Date.now(),
+    likes: 0
   });
 
-  alert("Blog Published!");
+  alert("AI Blog Created!");
+};
 
   document.getElementById("blogTitle").value = "";
   document.getElementById("blogDesc").value = "";
