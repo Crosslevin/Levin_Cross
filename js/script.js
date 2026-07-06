@@ -109,11 +109,17 @@ if (blogContainer) {
       const id = item.id;
 
       blogContainer.innerHTML += `
-        <div class="card">
-          ${data.image ? `<img src="${data.image}" style="width:100%;border-radius:10px;">` : ""}
+  <div class="card">
+    <h3>${data.title}</h3>
+    <p>${data.desc}</p>
 
-          <h3>${data.title}</h3>
-          <p>${data.desc}</p>
+    <!-- ❤️ ADD HERE -->
+    <button onclick="likeBlog('${id}', ${data.likes || 0})">
+      ❤️ Like (${data.likes || 0})
+    </button>
+
+  </div>
+`;
 
           <a href="post.html?id=${id}">Read Full →</a>
 
