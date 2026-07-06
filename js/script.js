@@ -36,3 +36,20 @@ if (themeBtn) {
         }
     });
 }
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+
+// Google Login function
+function googleLogin() {
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      const user = result.user;
+      console.log("Login Success:", user.displayName);
+      alert("Welcome " + user.displayName);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
