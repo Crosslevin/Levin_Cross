@@ -1,8 +1,19 @@
-import { auth } from "./firebase.js";
+import { auth, db } from "./firebase.js";
+
 import {
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+  collection,
+  addDoc,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const provider = new GoogleAuthProvider();
 
 // Theme Button
 const themeBtn = document.getElementById("themeBtn");
@@ -11,14 +22,13 @@ if (themeBtn) {
   themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("light");
 
-    themeBtn.textContent =
-      document.body.classList.contains("light")
-        ? "☀️ Light Mode"
-        : "🌙 Dark Mode";
+    themeBtn.textContent = document.body.classList.contains("light")
+      ? "☀️ Light Mode"
+      : "🌙 Dark Mode";
   });
 }
 
-// Search Box
+// Search
 const search = document.getElementById("searchBox");
 
 if (search) {
@@ -26,49 +36,66 @@ if (search) {
     console.log("Searching:", search.value);
   });
 }
-import { auth } from "./firebase.js";
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-const provider = new GoogleAuthProvider();
-
-/* ======================
-   GOOGLE LOGIN
-====================== */
+// Google Login
 window.googleLogin = async function () {
   try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
-    console.log(user);
+    await signInWithPopup(auth, provider);
   } catch (error) {
-    console.error(error);
     alert(error.message);
   }
 };
 
-/* ======================
-   LOGOUT
-====================== */
+// Logout
 window.logout = async function () {
   await signOut(auth);
 };
 
-/* ======================
-   AUTH STATE (IMPORTANT)
-====================== */
+// Login State
 onAuthStateChanged(auth, (user) => {
   const userSection = document.getElementById("userSection");
   const userName = document.getElementById("userName");
 
   if (user) {
-    userSection.style.display = "block";
-    userName.textContent = user.displayName;
+    if (userSection) userSection.style.display = "block";
+    if (userName) userName.textContent = user.displayName;
   } else {
-    userSection.style.display = "none";
+    if (userSection) userSection.style.display = "none";
   }
 });
+
+// Add Blog
+window.addBlog = async function () {
+  const title = prompt("Blog Title");
+  const desc = prompt("Blog Description");
+
+  if (!title || !desc) return;
+
+  await addDoc(collection(db, "blogs"), {
+    title,
+    desc,
+    time: Date.now()
+  });
+
+  alert("Blog Published!");
+};
+
+// Show Blogs
+const blogContainer = document.getElementById("blogContainer");
+
+if (blogContainer) {
+  onSnapshot(collection(db, "blogs"), (snapshot) => {
+    blogContainer.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+
+      blogContainer.innerHTML += `
+        <div class="card">
+          <h3>${data.title}</h3>
+          <p>${data.desc}</p>
+        </div>
+      `;
+    });
+  });
+}
