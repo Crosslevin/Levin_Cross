@@ -77,7 +77,29 @@ window.addBlog = async function () {
 
   alert("Blog Published!");
 };
+window.publishBlog = async function () {
+  const title = document.getElementById("blogTitle").value;
+  const desc = document.getElementById("blogDesc").value;
+  const image = document.getElementById("blogImage").value;
 
+  if (!title || !desc) {
+    alert("Fill all fields");
+    return;
+  }
+
+  await addDoc(collection(db, "blogs"), {
+    title,
+    desc,
+    image: image || "",
+    time: Date.now()
+  });
+
+  alert("Blog Published!");
+
+  document.getElementById("blogTitle").value = "";
+  document.getElementById("blogDesc").value = "";
+  document.getElementById("blogImage").value = "";
+};
 // Show Blogs
 const blogContainer = document.getElementById("blogContainer");
 
