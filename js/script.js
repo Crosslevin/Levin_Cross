@@ -122,11 +122,6 @@ window.generateAI = async function () {
   alert("AI Blog Created!");
 };
 
-  
-  if (document.getElementById("blogImage"))
-    document.getElementById("blogImage").value = "";
-};
-
 /* ================= BLOG DISPLAY ================= */
 const blogContainer = document.getElementById("blogContainer");
 
