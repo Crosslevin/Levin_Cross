@@ -213,3 +213,16 @@ onAuthStateChanged(auth, (user) => {
 import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
 
 const messaging = getMessaging();
+async function requestNotification() {
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: "YOUR_VAPID_KEY"
+    });
+
+    console.log("Notification Token:", token);
+  } catch (err) {
+    console.log("Notification error", err);
+  }
+}
+
+requestNotification();
