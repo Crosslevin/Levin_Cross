@@ -10,12 +10,15 @@ import {
 import {
   collection,
   addDoc,
-  onSnapshot
+  onSnapshot,
+  deleteDoc,
+  doc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 const provider = new GoogleAuthProvider();
 
-// Theme Button
+/* ================= THEME ================= */
 const themeBtn = document.getElementById("themeBtn");
 
 if (themeBtn) {
@@ -28,7 +31,7 @@ if (themeBtn) {
   });
 }
 
-// Search
+/* ================= SEARCH ================= */
 const search = document.getElementById("searchBox");
 
 if (search) {
@@ -37,52 +40,47 @@ if (search) {
   });
 }
 
-// Google Login
+/* ================= LOGIN ================= */
 window.googleLogin = async function () {
   try {
     await signInWithPopup(auth, provider);
-  } catch (error) {
-    alert(error.message);
+  } catch (err) {
+    alert(err.message);
   }
 };
 
-// Logout
+/* ================= LOGOUT ================= */
 window.logout = async function () {
   await signOut(auth);
 };
 
-// Login State
+/* ================= AUTH STATE ================= */
 const ADMIN_EMAIL = "yourmail@gmail.com";
 
 onAuthStateChanged(auth, (user) => {
+  const userSection = document.getElementById("userSection");
+  const userName = document.getElementById("userName");
   const adminPanel = document.getElementById("adminPanel");
 
-  if (user && user.email === ADMIN_EMAIL) {
-    if (adminPanel) adminPanel.style.display = "block";
+  if (user) {
+    if (userSection) userSection.style.display = "block";
+    if (userName) userName.textContent = user.displayName;
+
+    if (user && user.email === ADMIN_EMAIL) {
+      if (adminPanel) adminPanel.style.display = "block";
+    }
+
   } else {
+    if (userSection) userSection.style.display = "none";
     if (adminPanel) adminPanel.style.display = "none";
   }
 });
 
-// Add Blog
-window.addBlog = async function () {
-  const title = prompt("Blog Title");
-  const desc = prompt("Blog Description");
-
-  if (!title || !desc) return;
-
-  await addDoc(collection(db, "blogs"), {
-    title,
-    desc,
-    time: Date.now()
-  });
-
-  alert("Blog Published!");
-};
+/* ================= BLOG PUBLISH ================= */
 window.publishBlog = async function () {
-  const title = document.getElementById("blogTitle").value;
-  const desc = document.getElementById("blogDesc").value;
-  const image = document.getElementById("blogImage").value;
+  const title = document.getElementById("blogTitle")?.value;
+  const desc = document.getElementById("blogDesc")?.value;
+  const image = document.getElementById("blogImage")?.value;
 
   if (!title || !desc) {
     alert("Fill all fields");
@@ -100,44 +98,47 @@ window.publishBlog = async function () {
 
   document.getElementById("blogTitle").value = "";
   document.getElementById("blogDesc").value = "";
-  document.getElementById("blogImage").value = "";
+  if (document.getElementById("blogImage"))
+    document.getElementById("blogImage").value = "";
 };
-// Show Blogs
+
+/* ================= BLOG DISPLAY ================= */
 const blogContainer = document.getElementById("blogContainer");
 
-blogContainer.innerHTML += `
-  <div class="card">
-    ${data.image ? `<img src="${data.image}" style="width:100%;border-radius:10px;">` : ""}
+if (blogContainer) {
+  onSnapshot(collection(db, "blogs"), (snapshot) => {
+    blogContainer.innerHTML = "";
 
-    <h3>${data.title}</h3>
-    <p>${data.desc}</p>
-
-    <a href="post.html?id=${id}">Read Full →</a>
-
-    <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
-    <button onclick="editBlog('${id}','${data.title}','${data.desc}')">✏️ Edit</button>
-  </div>
-`;
+    snapshot.forEach((item) => {
+      const data = item.data();
+      const id = item.id;
 
       blogContainer.innerHTML += `
         <div class="card">
+          ${data.image ? `<img src="${data.image}" style="width:100%;border-radius:10px;">` : ""}
+
           <h3>${data.title}</h3>
           <p>${data.desc}</p>
 
+          <a href="post.html?id=${id}">Read Full →</a>
+
           <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
-          <button onclick="editBlog('${id}', '${data.title}', '${data.desc}')">✏️ Edit</button>
+          <button onclick="editBlog('${id}','${data.title}','${data.desc}')">✏️ Edit</button>
         </div>
       `;
     });
   });
 }
-import { deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+/* ================= DELETE ================= */
 window.deleteBlog = async function (id) {
   if (confirm("Delete this blog?")) {
     await deleteDoc(doc(db, "blogs", id));
-    alert("Deleted!");
-  }window.editBlog = async function (id, oldTitle, oldDesc) {
+  }
+};
+
+/* ================= EDIT ================= */
+window.editBlog = async function (id, oldTitle, oldDesc) {
   const newTitle = prompt("Edit Title", oldTitle);
   const newDesc = prompt("Edit Description", oldDesc);
 
@@ -149,70 +150,13 @@ window.deleteBlog = async function (id) {
   });
 
   alert("Updated!");
-};onAuthStateChanged(auth, (user) => {
-  const adminPanel = document.getElementById("adminPanel");
-
-  if (user) {
-    if (adminPanel) adminPanel.style.display = "block";
-  } else {
-    if (adminPanel) adminPanel.style.display = "none";
-  }
-});
 };
-  try {
-    await addDoc(collection(db, "blogs"), {
-      title: title,
-      desc: desc,
-      time: Date.now()
-    });
 
-    alert("Blog Published Successfully!");
-
-    document.getElementById("blogTitle").value = "";
-    document.getElementById("blogDesc").value = "";
-
-  } catch (error) {
-    console.error(error);
-    alert("Error publishing blog");
-  }
-};
-if (blogContainer) {
-  onSnapshot(collection(db, "blogs"), (snapshot) => {
-    blogContainer.innerHTML = "";
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      blogContainer.innerHTML += `
-        <div class="card">
-          <h3>${data.title}</h3>
-          <p>${data.desc}</p>
-        </div>
-      `;
-    });
-  });
-}
-// Show admin panel only when logged in
-onAuthStateChanged(auth, (user) => {
-  const userSection = document.getElementById("userSection");
-  const userName = document.getElementById("userName");
-  const adminPanel = document.getElementById("adminPanel");
-
-  if (user) {
-    if (userSection) userSection.style.display = "block";
-    if (userName) userName.textContent = user.displayName;
-
-    // Admin panel show
-    if (adminPanel) adminPanel.style.display = "block";
-
-  } else {
-    if (userSection) userSection.style.display = "none";
-    if (adminPanel) adminPanel.style.display = "none";
-  }
-});
+/* ================= NOTIFICATIONS ================= */
 import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
 
 const messaging = getMessaging();
+
 async function requestNotification() {
   try {
     const token = await getToken(messaging, {
@@ -221,7 +165,7 @@ async function requestNotification() {
 
     console.log("Notification Token:", token);
   } catch (err) {
-    console.log("Notification error", err);
+    console.log(err);
   }
 }
 
