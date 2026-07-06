@@ -1,32 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Blog Post</title>
-</head>
-<body>
+import { collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-<div id="post"></div>
+window.addComment = async function () {
+  const text = document.getElementById("commentBox").value;
 
-<script type="module">
-import { db } from "./js/firebase.js";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+  await addDoc(collection(db, "comments"), {
+    text,
+    time: Date.now()
+  });
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+  document.getElementById("commentBox").value = "";
+};
 
-const ref = doc(db, "blogs", id);
-const snap = await getDoc(ref);
+onSnapshot(collection(db, "comments"), (snap) => {
+  const box = document.getElementById("comments");
+  box.innerHTML = "";
 
-if (snap.exists()) {
-  const data = snap.data();
-
-  document.getElementById("post").innerHTML = `
-    <h1>${data.title}</h1>
-    ${data.image ? `<img src="${data.image}" width="100%">` : ""}
-    <p>${data.desc}</p>
-  `;
-}
-</script>
-
-</body>
-</html>
+  snap.forEach((doc) => {
+    box.innerHTML += `<p>💬 ${doc.data().text}</p>`;
+  });
+});
