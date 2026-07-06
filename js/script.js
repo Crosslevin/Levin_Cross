@@ -210,3 +210,6 @@ onAuthStateChanged(auth, (user) => {
     if (adminPanel) adminPanel.style.display = "none";
   }
 });
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
+
+const messaging = getMessaging();
