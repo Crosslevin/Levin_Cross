@@ -103,13 +103,19 @@ window.publishBlog = async function () {
 // Show Blogs
 const blogContainer = document.getElementById("blogContainer");
 
-if (blogContainer) {
-  onSnapshot(collection(db, "blogs"), (snapshot) => {
-    blogContainer.innerHTML = "";
+blogContainer.innerHTML += `
+  <div class="card">
+    ${data.image ? `<img src="${data.image}" style="width:100%;border-radius:10px;">` : ""}
 
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      const id = doc.id;
+    <h3>${data.title}</h3>
+    <p>${data.desc}</p>
+
+    <a href="post.html?id=${id}">Read Full →</a>
+
+    <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
+    <button onclick="editBlog('${id}','${data.title}','${data.desc}')">✏️ Edit</button>
+  </div>
+`;
 
       blogContainer.innerHTML += `
         <div class="card">
