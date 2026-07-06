@@ -15,7 +15,15 @@ import {
   doc,
   updateDoc
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { updateDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+window.likeBlog = async function (id, likes) {
+  const ref = doc(db, "blogs", id);
+
+  await updateDoc(ref, {
+    likes: likes + 1
+  });
+};
 const provider = new GoogleAuthProvider();
 
 /* ================= THEME ================= */
