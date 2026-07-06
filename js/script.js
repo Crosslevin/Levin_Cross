@@ -1,3 +1,22 @@
+
+/* ================= NOTIFICATIONS ================= */
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
+
+const messaging = getMessaging();
+
+async function requestNotification() {
+  try {
+    const token = await getToken(messaging, {
+      vapidKey: "YOUR_VAPID_KEY"
+    });
+
+    console.log("Notification Token:", token);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+requestNotification();
 import { auth, db } from "./firebase.js";
 window.filterBlogs = function () {
   const value = document.getElementById("filter").value;
@@ -163,22 +182,3 @@ window.editBlog = async function (id, oldTitle, oldDesc) {
 
   alert("Updated!");
 };
-
-/* ================= NOTIFICATIONS ================= */
-import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
-
-const messaging = getMessaging();
-
-async function requestNotification() {
-  try {
-    const token = await getToken(messaging, {
-      vapidKey: "YOUR_VAPID_KEY"
-    });
-
-    console.log("Notification Token:", token);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-requestNotification();
