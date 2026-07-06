@@ -106,7 +106,17 @@
     </section>
     <!-- Latest Articles -->
     <section class="latest">
+<section id="adminPanel" style="display:none; margin:20px 0;">
+    <h2>Admin Blog Editor</h2>
 
+    <input type="text" id="blogTitle" placeholder="Enter Blog Title">
+    <br><br>
+
+    <textarea id="blogDesc" placeholder="Enter Blog Description"></textarea>
+    <br><br>
+
+    <button onclick="publishBlog()">📤 Publish Blog</button>
+</section>
         <h2>Latest Articles</h2>
 <div id="blogContainer"></div>
         <div class="grid">
