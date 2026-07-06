@@ -47,13 +47,19 @@
         </p>
 
         <div class="hero-buttons">
-            <a href="blog.html">
-                <button>Read Latest Blogs</button>
-            </a>
+    <a href="blog.html">
+        <button>Read Latest Blogs</button>
+    </a>
 
-            <button onclick="googleLogin()" id="googleLoginBtn">
-                Login with Google
-            </button>
+    <button onclick="googleLogin()" id="googleLoginBtn">
+        Login with Google
+    </button>
+
+    <!-- ✅ ADD THIS -->
+    <div id="userSection" style="display:none; margin-top:10px;">
+        <p>Welcome, <span id="userName"></span></p>
+        <button onclick="logout()">Logout</button>
+    </div>
         </div>
 
     </section>
