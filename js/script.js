@@ -179,3 +179,7 @@ async function requestNotification() {
 }
 
 requestNotification();
+window.filterBlogs = function () {
+  const value = document.getElementById("filter").value;
+  console.log("Filter:", value);
+};
