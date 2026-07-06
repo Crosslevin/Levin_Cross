@@ -52,6 +52,8 @@ window.logout = async function () {
 };
 
 // Login State
+const ADMIN_EMAIL = "yourmail@gmail.com";
+
 onAuthStateChanged(auth, (user) => {
   const adminPanel = document.getElementById("adminPanel");
 
