@@ -2,9 +2,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
+// Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyAP-Ts_3DtOKjEyAJMhL4uzkzjfE6vGEMg",
+  apiKey: "AIzaSyAP-Ts_3DtOKJ...",
   authDomain: "levin-cross.firebaseapp.com",
   projectId: "levin-cross",
   storageBucket: "levin-cross.firebasestorage.app",
@@ -13,16 +15,18 @@ const firebaseConfig = {
   measurementId: "G-SC5GY5HLY9"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-getAnalytics(app);
 
+// Analytics (optional but ok)
+const analytics = getAnalytics(app);
+
+// Services
 const auth = getAuth(app);
-
-export { auth };
-
-console.log("✅ Firebase Connected");
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
 const db = getFirestore(app);
 
+// Export EVERYTHING (clean)
 export { auth, db };
+
+// Debug
+console.log("✅ Firebase Connected");
