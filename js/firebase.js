@@ -4,7 +4,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyAP-Ts_3DtOKjEyAJMhL4uzkzjfE6vGEMg",
   authDomain: "levin-cross.firebaseapp.com",
   projectId: "levin-cross",
   storageBucket: "levin-cross.firebasestorage.app",
@@ -14,11 +14,10 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+getAnalytics(app);
 
-// Authentication
 const auth = getAuth(app);
 
 export { auth };
 
-console.log("Firebase Connected Successfully!");
+console.log("✅ Firebase Connected");
