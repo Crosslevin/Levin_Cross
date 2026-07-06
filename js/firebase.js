@@ -1,9 +1,10 @@
 // Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-analytics.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAP-Ts_3DtOKjEyAJMhL4uzkzjfE6vGEMg",
+  apiKey: "YOUR_API_KEY",
   authDomain: "levin-cross.firebaseapp.com",
   projectId: "levin-cross",
   storageBucket: "levin-cross.firebasestorage.app",
@@ -14,5 +15,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+// Authentication
+const auth = getAuth(app);
+
+export { auth };
 
 console.log("Firebase Connected Successfully!");
