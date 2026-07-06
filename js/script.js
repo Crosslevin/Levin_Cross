@@ -53,14 +53,12 @@ window.logout = async function () {
 
 // Login State
 onAuthStateChanged(auth, (user) => {
-  const userSection = document.getElementById("userSection");
-  const userName = document.getElementById("userName");
+  const adminPanel = document.getElementById("adminPanel");
 
-  if (user) {
-    if (userSection) userSection.style.display = "block";
-    if (userName) userName.textContent = user.displayName;
+  if (user && user.email === ADMIN_EMAIL) {
+    if (adminPanel) adminPanel.style.display = "block";
   } else {
-    if (userSection) userSection.style.display = "none";
+    if (adminPanel) adminPanel.style.display = "none";
   }
 });
 
@@ -82,15 +80,55 @@ window.addBlog = async function () {
 
 // Show Blogs
 const blogContainer = document.getElementById("blogContainer");
-window.publishBlog = async function () {
-  const title = document.getElementById("blogTitle").value;
-  const desc = document.getElementById("blogDesc").value;
 
-  if (!title || !desc) {
-    alert("Please fill all fields");
-    return;
+if (blogContainer) {
+  onSnapshot(collection(db, "blogs"), (snapshot) => {
+    blogContainer.innerHTML = "";
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      const id = doc.id;
+
+      blogContainer.innerHTML += `
+        <div class="card">
+          <h3>${data.title}</h3>
+          <p>${data.desc}</p>
+
+          <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
+          <button onclick="editBlog('${id}', '${data.title}', '${data.desc}')">✏️ Edit</button>
+        </div>
+      `;
+    });
+  });
+}
+import { deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+window.deleteBlog = async function (id) {
+  if (confirm("Delete this blog?")) {
+    await deleteDoc(doc(db, "blogs", id));
+    alert("Deleted!");
+  }window.editBlog = async function (id, oldTitle, oldDesc) {
+  const newTitle = prompt("Edit Title", oldTitle);
+  const newDesc = prompt("Edit Description", oldDesc);
+
+  if (!newTitle || !newDesc) return;
+
+  await updateDoc(doc(db, "blogs", id), {
+    title: newTitle,
+    desc: newDesc
+  });
+
+  alert("Updated!");
+};onAuthStateChanged(auth, (user) => {
+  const adminPanel = document.getElementById("adminPanel");
+
+  if (user) {
+    if (adminPanel) adminPanel.style.display = "block";
+  } else {
+    if (adminPanel) adminPanel.style.display = "none";
   }
-
+});
+};
   try {
     await addDoc(collection(db, "blogs"), {
       title: title,
