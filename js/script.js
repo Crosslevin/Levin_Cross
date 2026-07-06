@@ -103,8 +103,7 @@ window.generateAI = async function () {
   alert("AI Blog Created!");
 };
 
-  document.getElementById("blogTitle").value = "";
-  document.getElementById("blogDesc").value = "";
+  
   if (document.getElementById("blogImage"))
     document.getElementById("blogImage").value = "";
 };
