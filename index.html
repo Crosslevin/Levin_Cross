@@ -1,159 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Levin Cross | Professional Multi-Topic Blog</title>
 
-    <meta name="description" content="Levin Cross - AI, Technology, Education, Programming, Career, Finance, Health, Travel and more.">
+    <meta name="description"
+        content="Levin Cross - AI, Technology, Education, Programming, Career, Finance, Health, Travel and more.">
 
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<header>
-    <div class="logo">
-        <h1>Levin Cross</h1>
-    </div>
+<body>
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="blog.html">Blog</a>
-        <a href="categories.html">Categories</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
-    <button id="themeBtn">🌙 Dark Mode</button>
-</header>
-<section class="hero">
-<section class="search-section">
+    <!-- Header -->
+    <header>
 
-<h2>Search Articles</h2>
+        <div class="logo">
+            <h1>Levin Cross</h1>
+        </div>
 
-<input
-type="text"
-id="searchBox"
-placeholder="Search AI, Technology, Education...">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="blog.html">Blog</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
 
-</section>
-<h2>Explore. Learn. Grow.</h2>
+        <button id="themeBtn">🌙 Dark Mode</button>
 
-<p>
-Welcome to Levin Cross – your destination for AI, Technology,
-Programming, Education, Business, Finance, Health,
-Travel, Motivation and much more.
-</p>
+    </header>
 
-<a href="blog.html">
-<button>Read Latest Blogs</button>
-</a>
+    <!-- Hero Section -->
+    <section class="hero">
 
-</section>
+        <h2>Explore. Learn. Grow.</h2>
 
-    <h2>Welcome to Levin Cross</h2>
-<button onclick="googleLogin()">Login with Google</button>
-    <p>
-        Your destination for AI, Technology, Programming,
-        Education, Career, Business, Finance,
-        Health, Travel and much more.
-    </p>
+        <p>
+            Welcome to <strong>Levin Cross</strong> – your destination for AI,
+            Technology, Programming, Education, Career,
+            Business, Finance, Health, Travel,
+            Motivation and much more.
+        </p>
 
-    <button>Explore Blogs</button>
+        <div class="hero-buttons">
+            <a href="blog.html">
+                <button>Read Latest Blogs</button>
+            </a>
 
-</section>
+            <button onclick="googleLogin()" id="googleLoginBtn">
+                Login with Google
+            </button>
+        </div>
 
-<section class="categories">
-<section class="latest">
+    </section>
 
-<h2>Latest Articles</h2>
-<section class="featured-posts">
+    <!-- Search -->
+    <section class="search-section">
 
-<h2>Featured Posts</h2>
+        <h2>Search Articles</h2>
 
-<div class="grid">
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search AI, Technology, Education...">
 
-<div class="card">
-<h3>🤖 AI & Technology</h3>
-<p>Latest AI tools, ChatGPT, automation aur future technology.</p>
-<a href="blog.html">Read More →</a>
-</div>
+    </section>
 
-<div class="card">
-<h3>💻 Programming</h3>
-<p>HTML, CSS, JavaScript, Python aur coding tutorials.</p>
-<a href="blog.html">Read More →</a>
-</div>
+    <!-- Featured Posts Start -->
+    <section class="featured-posts">
 
-<div class="card">
-<h3>📚 Education</h3>
-<p>Study tips, government exams aur career guidance.</p>
-<a href="blog.html">Read More →</a>
-</div>
+        <h2>Featured Posts</h2>
 
-</div>
+        <div class="grid">
 
-</section>
-<div class="grid">
+            <div class="card">
+                <h3>🤖 AI & Technology</h3>
+                <p>Latest AI tools, ChatGPT, automation and future technology.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>
-<h3>Artificial Intelligence</h3>
-<p>Latest AI news and tutorials.</p>
-</div>
+            <div class="card">
+                <h3>💻 Programming</h3>
+                <p>HTML, CSS, JavaScript, Python and coding tutorials.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>
-<h3>Programming</h3>
-<p>HTML, CSS, JavaScript, Python and more.</p>
-</div>
+            <div class="card">
+                <h3>📚 Education</h3>
+                <p>Study tips, Government exams and career guidance.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>
-<h3>Education</h3>
-<p>Study tips, exams and career guidance.</p>
-</div>
+        </div>
 
-</div>
+    </section>
+    <!-- Latest Articles -->
+    <section class="latest">
 
-</section>
-<h2>Popular Categories</h2>
+        <h2>Latest Articles</h2>
 
-<div class="grid">
+        <div class="grid">
 
-<div>🤖 AI</div>
+            <div class="card">
+                <h3>Artificial Intelligence</h3>
+                <p>Latest AI news, tools and tutorials.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>💻 Programming</div>
+            <div class="card">
+                <h3>Programming</h3>
+                <p>HTML, CSS, JavaScript, Python and Web Development.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>🌐 Web Development</div>
+            <div class="card">
+                <h3>Education</h3>
+                <p>Study tips, Government Exams and Career Guidance.</p>
+                <a href="blog.html">Read More →</a>
+            </div>
 
-<div>📱 Android Apps</div>
+        </div>
 
-<div>📚 Education</div>
+    </section>
 
-<div>💰 Online Earning</div>
+    <!-- Categories -->
+    <section class="categories">
 
-<div>🚀 Startup</div>
+        <h2>Popular Categories</h2>
 
-<div>💹 Finance</div>
+        <div class="grid">
 
-<div>🏥 Health</div>
+            <div>🤖 AI</div>
+            <div>💻 Programming</div>
+            <div>🌐 Web Development</div>
+            <div>📱 Android Apps</div>
+            <div>📚 Education</div>
+            <div>💰 Online Earning</div>
+            <div>🚀 Startup</div>
+            <div>💹 Finance</div>
+            <div>🏥 Health</div>
+            <div>✈️ Travel</div>
+            <div>🎮 Gaming</div>
+            <div>📖 Motivation</div>
 
-<div>✈️ Travel</div>
+        </div>
 
-<div>🎮 Gaming</div>
+    </section>
 
-<div>📖 Motivation</div>
+    <!-- Footer -->
+    <footer>
 
-</div>
+        <p>© 2026 Levin Cross. All Rights Reserved.</p>
 
-</section>
+    </footer>
 
-<footer>
-
-<p>© 2026 Levin Cross. All Rights Reserved.</p>
-
-</footer>
-
-<script type="module" src="js/firebase.js"></script>
-<script type="module" src="js/script.js"></script>
+    <!-- JavaScript Files -->
+    <script type="module" src="js/firebase.js"></script>
+    <script type="module" src="js/script.js"></script>
 
 </body>
 </html>
- 
