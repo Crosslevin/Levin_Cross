@@ -23,3 +23,16 @@ console.log("Searching:",value);
 }
 
 });
+const themeBtn = document.getElementById("themeBtn");
+
+if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+        document.body.classList.toggle("light");
+
+        if (document.body.classList.contains("light")) {
+            themeBtn.textContent = "☀️ Light Mode";
+        } else {
+            themeBtn.textContent = "🌙 Dark Mode";
+        }
+    });
+}
