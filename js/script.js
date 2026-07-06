@@ -26,26 +26,49 @@ if (search) {
     console.log("Searching:", search.value);
   });
 }
+import { auth } from "./firebase.js";
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-// Google Login
 const provider = new GoogleAuthProvider();
 
+/* ======================
+   GOOGLE LOGIN
+====================== */
 window.googleLogin = async function () {
   try {
     const result = await signInWithPopup(auth, provider);
-
     const user = result.user;
 
-    alert("Welcome " + user.displayName);
-
     console.log(user);
-
-    // Login ke baad Blog Page
-    window.location.href = "blog.html";
-
   } catch (error) {
     console.error(error);
-
-    alert("Login Failed: " + error.message);
+    alert(error.message);
   }
 };
+
+/* ======================
+   LOGOUT
+====================== */
+window.logout = async function () {
+  await signOut(auth);
+};
+
+/* ======================
+   AUTH STATE (IMPORTANT)
+====================== */
+onAuthStateChanged(auth, (user) => {
+  const userSection = document.getElementById("userSection");
+  const userName = document.getElementById("userName");
+
+  if (user) {
+    userSection.style.display = "block";
+    userName.textContent = user.displayName;
+  } else {
+    userSection.style.display = "none";
+  }
+});
