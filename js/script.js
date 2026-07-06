@@ -1,5 +1,8 @@
 import { auth, db } from "./firebase.js";
-
+window.filterBlogs = function () {
+  const value = document.getElementById("filter").value;
+  console.log("Filter:", value);
+};
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -180,7 +183,3 @@ async function requestNotification() {
 }
 
 requestNotification();
-window.filterBlogs = function () {
-  const value = document.getElementById("filter").value;
-  console.log("Filter:", value);
-};
