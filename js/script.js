@@ -4,53 +4,48 @@ import {
   signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-document.addEventListener("DOMContentLoaded", () => {
+// Theme Button
+const themeBtn = document.getElementById("themeBtn");
 
-  // Blog Button
-  const button = document.querySelector("button");
-  if (button) {
-    button.addEventListener("click", () => {
-      // Agar ye Google Login button hai to is code ko hata dena
-      // window.location.href = "blog.html";
-    });
-  }
+if (themeBtn) {
+  themeBtn.addEventListener("click", () => {
+    document.body.classList.toggle("light");
 
-  // Search
-  const search = document.getElementById("searchBox");
-  if (search) {
-    search.addEventListener("keyup", () => {
-      const value = search.value.toLowerCase();
-      console.log("Searching:", value);
-    });
-  }
+    themeBtn.textContent =
+      document.body.classList.contains("light")
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
+  });
+}
 
-  // Theme
-  const themeBtn = document.getElementById("themeBtn");
-  if (themeBtn) {
-    themeBtn.addEventListener("click", () => {
-      document.body.classList.toggle("light");
+// Search Box
+const search = document.getElementById("searchBox");
 
-      if (document.body.classList.contains("light")) {
-        themeBtn.textContent = "☀️ Light Mode";
-      } else {
-        themeBtn.textContent = "🌙 Dark Mode";
-      }
-    });
-  }
-});
+if (search) {
+  search.addEventListener("keyup", () => {
+    console.log("Searching:", search.value);
+  });
+}
 
 // Google Login
 const provider = new GoogleAuthProvider();
 
-window.googleLogin = function () {
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      alert("Welcome " + user.displayName);
-      console.log(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      alert(error.message);
-    });
+window.googleLogin = async function () {
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    const user = result.user;
+
+    alert("Welcome " + user.displayName);
+
+    console.log(user);
+
+    // Login ke baad Blog Page
+    window.location.href = "blog.html";
+
+  } catch (error) {
+    console.error(error);
+
+    alert("Login Failed: " + error.message);
+  }
 };
