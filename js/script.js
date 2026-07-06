@@ -99,3 +99,21 @@ if (blogContainer) {
     });
   });
 }
+// Show admin panel only when logged in
+onAuthStateChanged(auth, (user) => {
+  const userSection = document.getElementById("userSection");
+  const userName = document.getElementById("userName");
+  const adminPanel = document.getElementById("adminPanel");
+
+  if (user) {
+    if (userSection) userSection.style.display = "block";
+    if (userName) userName.textContent = user.displayName;
+
+    // Admin panel show
+    if (adminPanel) adminPanel.style.display = "block";
+
+  } else {
+    if (userSection) userSection.style.display = "none";
+    if (adminPanel) adminPanel.style.display = "none";
+  }
+});
