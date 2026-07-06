@@ -63,21 +63,22 @@ window.logout = async function () {
 };
 
 /* ================= AUTH STATE ================= */
-const ADMIN_EMAIL = "yourmail@gmail.com";
+const ADMIN_EMAIL = "crosslevin@gmail.com";
 
 onAuthStateChanged(auth, (user) => {
+  const adminPanel = document.getElementById("adminPanel");
   const userSection = document.getElementById("userSection");
   const userName = document.getElementById("userName");
-  const adminPanel = document.getElementById("adminPanel");
 
   if (user) {
     if (userSection) userSection.style.display = "block";
     if (userName) userName.textContent = user.displayName;
 
-    if (user && user.email === ADMIN_EMAIL) {
-      if (adminPanel) adminPanel.style.display = "block";
+    // Sirf admin ko admin panel dikhega
+    if (adminPanel) {
+      adminPanel.style.display =
+        user.email === ADMIN_EMAIL ? "block" : "none";
     }
-
   } else {
     if (userSection) userSection.style.display = "none";
     if (adminPanel) adminPanel.style.display = "none";
