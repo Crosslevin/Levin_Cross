@@ -640,3 +640,337 @@ function renderBlogs() {
 }
 
 console.log("🔎 Search & Filter Ready");
+// ==========================================
+// Levin Cross - Part 1B.4
+// Edit & Delete Blog System
+// ==========================================
+
+// Delete Blog
+window.deleteBlog = async function (blogId) {
+
+    if (!window.isAdmin()) {
+        alert("Only admin can delete blogs.");
+        return;
+    }
+
+    const confirmDelete = confirm(
+        "Are you sure you want to delete this blog?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+        await deleteDoc(doc(db, "blogs", blogId));
+
+        alert("✅ Blog Deleted Successfully");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("❌ Failed to delete blog.");
+
+    }
+
+};
+
+// ==========================================
+// Edit Blog
+// ==========================================
+
+window.editBlog = async function (blogId) {
+
+    if (!window.isAdmin()) {
+        alert("Only admin can edit blogs.");
+        return;
+    }
+
+    const blog = allBlogs.find(item => item.id === blogId);
+
+    if (!blog) {
+        alert("Blog not found.");
+        return;
+    }
+
+    const newTitle = prompt("Edit Title", blog.title);
+
+    if (newTitle === null) return;
+
+    const newDesc = prompt("Edit Description", blog.desc);
+
+    if (newDesc === null) return;
+
+    const newCategory = prompt(
+        "Edit Category",
+        blog.category || "General"
+    );
+
+    if (newCategory === null) return;
+
+    try {
+
+        await updateDoc(doc(db, "blogs", blogId), {
+
+            title: newTitle.trim(),
+            desc: newDesc.trim(),
+            category: newCategory.trim(),
+            updatedAt: serverTimestamp()
+
+        });
+
+        alert("✅ Blog Updated Successfully");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("❌ Failed to update blog.");
+
+    }
+
+};
+
+console.log("✏️ Edit & Delete System Ready");
+// ==========================================
+// Levin Cross - Part 1C.1
+// AI Blog Generator (Template)
+// ==========================================
+
+const aiTitles = [
+    "The Future of Artificial Intelligence",
+    "Top JavaScript Tips Every Developer Should Know",
+    "Best Study Techniques for Students",
+    "Latest Technology Trends in 2026",
+    "How to Start Learning Programming",
+    "Cyber Security Basics for Beginners",
+    "Top Online Earning Ideas",
+    "Career Tips for Students"
+];
+
+const aiCategories = [
+    "AI",
+    "Programming",
+    "Technology",
+    "Education",
+    "Career"
+];
+
+const aiDescriptions = [
+    "In this article, we explore practical concepts, useful tips, and real-world applications to help you understand the topic better.",
+
+    "This guide explains the fundamentals, common mistakes, and best practices with simple examples.",
+
+    "Discover modern trends, useful tools, and proven techniques that can improve your skills and productivity."
+];
+
+// Generate AI Blog
+window.generateAI = function () {
+
+    const randomTitle =
+        aiTitles[Math.floor(Math.random() * aiTitles.length)];
+
+    const randomCategory =
+        aiCategories[Math.floor(Math.random() * aiCategories.length)];
+
+    const randomDescription =
+        aiDescriptions[Math.floor(Math.random() * aiDescriptions.length)];
+
+    document.getElementById("blogTitle").value = randomTitle;
+
+    document.getElementById("blogDesc").value = randomDescription;
+
+    const categoryField =
+        document.getElementById("blogCategory");
+
+    if (categoryField) {
+        categoryField.value = randomCategory;
+    }
+
+    alert("🤖 Blog template generated successfully!");
+
+};
+
+console.log("🤖 AI Blog Generator Ready");
+// ==========================================
+// Levin Cross - Part 1C.2
+// Real-Time Comment System
+// ==========================================
+
+import {
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    where,
+    orderBy,
+    serverTimestamp,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+// Add Comment
+window.addComment = async function (blogId) {
+
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const box = document.getElementById("commentBox");
+
+    const text = box.value.trim();
+
+    if (!text) {
+        alert("Enter a comment.");
+        return;
+    }
+
+    try {
+
+        await addDoc(collection(db, "comments"), {
+
+            blogId,
+
+            userName:
+                currentUser.displayName,
+
+            userEmail:
+                currentUser.email,
+
+            text,
+
+            createdAt:
+                serverTimestamp()
+
+        });
+
+        box.value = "";
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Failed to post comment.");
+
+    }
+
+};
+
+// ===============================
+// Load Comments
+// ===============================
+
+window.loadComments = function (blogId) {
+
+    const commentsDiv =
+        document.getElementById("comments");
+
+    const q = query(
+        collection(db, "comments"),
+        where("blogId", "==", blogId),
+        orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
+
+        commentsDiv.innerHTML = "";
+
+        snapshot.forEach((item) => {
+
+            const data = item.data();
+
+            commentsDiv.innerHTML += `
+
+            <div class="comment-card">
+
+                <strong>
+                    ${data.userName}
+                </strong>
+
+                <p>
+                    ${data.text}
+                </p>
+
+                ${
+                    window.isAdmin()
+                    ? `
+                    <button
+                        onclick="deleteComment('${item.id}')">
+                        🗑 Delete
+                    </button>
+                    `
+                    : ""
+                }
+
+            </div>
+
+         // ==========================================
+// Levin Cross - Part 1C.3
+// Firebase Push Notifications
+// ==========================================
+
+import {
+    getMessaging,
+    getToken,
+    onMessage
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
+
+import { app } from "./firebase.js";
+
+const messaging = getMessaging(app);
+
+// Request Notification Permission
+window.enableNotifications = async function () {
+
+    try {
+
+        const permission = await Notification.requestPermission();
+
+        if (permission !== "granted") {
+
+            alert("Notification permission denied.");
+
+            return;
+
+        }
+
+        const token = await getToken(messaging, {
+
+            vapidKey: "YOUR_VAPID_KEY"
+
+        });
+
+        console.log("FCM Token:", token);
+
+        alert("✅ Notifications Enabled");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Failed to enable notifications.");
+
+    }
+
+};
+
+// Receive Foreground Notifications
+onMessage(messaging, (payload) => {
+
+    console.log("Notification:", payload);
+
+    if (payload.notification) {
+
+        alert(
+            payload.notification.title +
+            "\n\n" +
+            payload.notification.body
+        );
+
+    }
+
+});
+
+console.log("🔔 Notification System Ready");
+`
