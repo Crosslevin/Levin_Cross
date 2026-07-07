@@ -365,7 +365,8 @@ window.publishBlog = async function () {
 
     const image =
         document.getElementById("blogImage")?.value.trim() || "";
-
+const category =
+    document.getElementById("blogCategory").value;
     // Validation
     if (!title) {
         alert("Please enter blog title.");
