@@ -1,21 +1,65 @@
-import { collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+import { db, auth } from "./firebase.js";
+
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 window.addComment = async function () {
-  const text = document.getElementById("commentBox").value;
 
-  await addDoc(collection(db, "comments"), {
-    text,
-    time: Date.now()
-  });
+  const commentBox = document.getElementById("commentBox");
+  const text = commentBox.value.trim();
 
-  document.getElementById("commentBox").value = "";
+  if (!text) {
+    alert("Please enter a comment.");
+    return;
+  }
+
+  try {
+
+    await addDoc(collection(db, "comments"), {
+      text: text,
+      user: auth.currentUser?.displayName || "Anonymous",
+      createdAt: serverTimestamp()
+    });
+
+    commentBox.value = "";
+
+  } catch (error) {
+
+    console.error("Error adding comment:", error);
+    alert("Failed to post comment.");
+
+  }
+
 };
 
-onSnapshot(collection(db, "comments"), (snap) => {
-  const box = document.getElementById("comments");
-  box.innerHTML = "";
+const commentsQuery = query(
+  collection(db, "comments"),
+  orderBy("createdAt", "desc")
+);
 
-  snap.forEach((doc) => {
-    box.innerHTML += `<p>💬 ${doc.data().text}</p>`;
+onSnapshot(commentsQuery, (snapshot) => {
+
+  const comments = document.getElementById("comments");
+
+  comments.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    comments.innerHTML += `
+      <div class="comment-card">
+        <h4>👤 ${data.user}</h4>
+        <p>💬 ${data.text}</p>
+      </div>
+    `;
+
   });
+
 });
