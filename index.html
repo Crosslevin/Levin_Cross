@@ -2,31 +2,39 @@
 <html lang="en">
 
 <head>
- <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
- <meta name="keywords" content="AI, Technology, Programming, Education, Blog">
-<meta name="author" content="Levin Cross">
-
-<meta property="og:title" content="Levin Cross Blog">
-<meta property="og:description" content="AI, Tech & Education Blog">
-<meta property="og:type" content="website">
+    <!-- Meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Levin Cross | Professional Multi-Topic Blog</title>
 
-    <meta name="description"
-        content="Levin Cross - AI, Technology, Education, Programming, Career, Finance, Health, Travel and more.">
+    <meta name="description" content="Levin Cross - AI, Technology, Education, Programming, Career, Finance, Health, Travel and more.">
 
+    <meta name="keywords" content="AI, Technology, Programming, Education, Blog">
+    <meta name="author" content="Levin Cross">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Levin Cross Blog">
+    <meta property="og:description" content="AI, Tech & Education Blog">
+    <meta property="og:type" content="website">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<button onclick="window.location.href='admin.html'">
-  🔐 Admin Dashboard
-</button>
+
+    <!-- Admin Button -->
+    <button onclick="window.location.href='admin.html'">
+        🔐 Admin Dashboard
+    </button>
+
     <!-- Header -->
     <header>
-
         <div class="logo">
             <h1>Levin Cross</h1>
         </div>
@@ -40,10 +48,9 @@
         </nav>
 
         <button id="themeBtn">🌙 Dark Mode</button>
-
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
 
         <h2>Explore. Learn. Grow.</h2>
@@ -56,19 +63,20 @@
         </p>
 
         <div class="hero-buttons">
-    <a href="blog.html">
-        <button>Read Latest Blogs</button>
-    </a>
 
-    <button onclick="googleLogin()" id="googleLoginBtn">
-        Login with Google
-    </button>
+            <a href="blog.html">
+                <button>Read Latest Blogs</button>
+            </a>
 
-    <!-- ✅ ADD THIS -->
-    <div id="userSection" style="display:none; margin-top:10px;">
-        <p>Welcome, <span id="userName"></span></p>
-        <button onclick="logout()">Logout</button>
-    </div>
+            <button id="googleLoginBtn" onclick="googleLogin()">
+                Login with Google
+            </button>
+
+            <div id="userSection" style="display:none;">
+                <p>Welcome, <span id="userName"></span></p>
+                <button onclick="logout()">Logout</button>
+            </div>
+
         </div>
 
     </section>
@@ -82,131 +90,95 @@
             type="text"
             id="searchBox"
             placeholder="Search AI, Technology, Education...">
-<h3>Filter by Category</h3>
 
-<select id="filter" onchange="filterBlogs()">
-    <option value="all">All Categories</option>
-    <option value="AI">AI</option>
-    <option value="Programming">Programming</option>
-    <option value="Education">Education</option>
-    <option value="Technology">Technology</option>
-</select>
+        <h3>Filter by Category</h3>
+
+        <select id="filter" onchange="filterBlogs()">
+            <option value="all">All Categories</option>
+            <option value="AI">AI</option>
+            <option value="Programming">Programming</option>
+            <option value="Education">Education</option>
+            <option value="Technology">Technology</option>
+        </select>
+
     </section>
 
-    <!-- Featured Posts Start -->
+    <!-- Featured Posts -->
     <section class="featured-posts">
-
-        <h2>Featured Posts</h2>
-
-        <div class="grid">
-
-            <div class="card">
-                <h3>🤖 AI & Technology</h3>
-                <p>Latest AI tools, ChatGPT, automation and future technology.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
-            <div class="card">
-                <h3>💻 Programming</h3>
-                <p>HTML, CSS, JavaScript, Python and coding tutorials.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
-            <div class="card">
-                <h3>📚 Education</h3>
-                <p>Study tips, Government exams and career guidance.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
-        </div>
-
+        ...
     </section>
+
     <!-- Latest Articles -->
     <section class="latest">
-<section id="adminPanel" style="display:none; margin:20px 0;">
-    <h2>Admin Blog Editor</h2>
 
-    <input type="text" id="blogTitle" placeholder="Enter Blog Title">
-    <br><br>
+        <!-- Admin Panel -->
+        <section id="adminPanel" style="display:none;">
 
-    <textarea id="blogDesc" placeholder="Enter Blog Description"></textarea>
-    <br><br>
+            <h2>Admin Blog Editor</h2>
 
-    <button onclick="publishBlog()">📤 Publish Blog</button>
-</section>
+            <input
+                type="text"
+                id="blogTitle"
+                placeholder="Enter Blog Title">
+
+            <br><br>
+
+            <textarea
+                id="blogDesc"
+                placeholder="Enter Blog Description">
+            </textarea>
+
+            <br><br>
+
+            <input
+                type="text"
+                id="blogImage"
+                placeholder="Image URL (Optional)">
+
+            <br><br>
+
+            <button onclick="publishBlog()">
+                📤 Publish Blog
+            </button>
+
+            <button onclick="generateAI()">
+                🧠 AI Generate Blog
+            </button>
+
+        </section>
+
         <h2>Latest Articles</h2>
-<div id="blogContainer"></div>
+
+        <div id="blogContainer"></div>
+
         <div class="grid">
-
-            <div class="card">
-                <h3>Artificial Intelligence</h3>
-                <p>Latest AI news, tools and tutorials.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
-            <div class="card">
-                <h3>Programming</h3>
-                <p>HTML, CSS, JavaScript, Python and Web Development.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
-            <div class="card">
-                <h3>Education</h3>
-                <p>Study tips, Government Exams and Career Guidance.</p>
-                <a href="blog.html">Read More →</a>
-            </div>
-
+            <!-- Blog Cards -->
         </div>
 
     </section>
 
     <!-- Categories -->
     <section class="categories">
-
-        <h2>Popular Categories</h2>
-
-        <div class="grid">
-
-            <div>🤖 AI</div>
-            <div>💻 Programming</div>
-            <div>🌐 Web Development</div>
-            <div>📱 Android Apps</div>
-            <div>📚 Education</div>
-            <div>💰 Online Earning</div>
-            <div>🚀 Startup</div>
-            <div>💹 Finance</div>
-            <div>🏥 Health</div>
-            <div>✈️ Travel</div>
-            <div>🎮 Gaming</div>
-            <div>📖 Motivation</div>
-
-        </div>
-
+        ...
     </section>
-<div class="ad-space">
-  <!-- Google AdSense Code Here -->
-</div>
+
+    <!-- Ads -->
+    <div class="ad-space">
+        <!-- Google AdSense -->
+    </div>
+
     <!-- Footer -->
     <footer>
-
         <p>© 2026 Levin Cross. All Rights Reserved.</p>
-
     </footer>
-<button onclick="addBlog()">➕ Add Blog (Admin)</button>
-    <!-- JavaScript Files -->
+
+    <button onclick="addBlog()">
+        ➕ Add Blog (Admin)
+    </button>
+
+    <!-- Firebase -->
     <script type="module" src="js/firebase.js"></script>
     <script type="module" src="js/script.js"></script>
 
 </body>
 </html>
-<input type="text" id="blogTitle" placeholder="Title">
-<br><br>
-
-<textarea id="blogDesc" placeholder="Description"></textarea>
-<br><br>
-
-<input type="text" id="blogImage" placeholder="Image URL (optional)">
-<br><br>
-
-<button onclick="publishBlog()">📤 Publish</button>
-<button onclick="generateAI()">🧠 AI Generate Blog</button>
