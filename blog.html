@@ -1,64 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Levin Cross | Blog</title>
 
-<link rel="stylesheet" href="css/style.css">
+<head>
+
+    <!-- Basic Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Levin Cross | Blog</title>
+
+    <meta name="description"
+        content="Read the latest articles on AI, Programming, Technology, Education, Career, Finance, Health, and more from Levin Cross.">
+
+    <meta name="keywords"
+        content="AI Blog, Programming, Technology, Education, Levin Cross">
+
+    <meta name="author" content="Levin Cross">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Levin Cross Blog">
+    <meta property="og:description"
+        content="Latest AI, Technology and Education Articles">
+    <meta property="og:type" content="website">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
 
-<header>
-<h1>Levin Cross</h1>
+    <!-- Header -->
+    <header>
 
-<nav>
-<a href="index.html">Home</a>
-<a href="blog.html">Blog</a>
-<a href="categories.html">Categories</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-</nav>
-</header>
+        <div class="logo">
+            <h1>Levin Cross</h1>
+        </div>
 
-<section class="hero">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="blog.html">Blog</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
 
-<h2>Latest Blog Articles</h2>
+    </header>
 
-<p>Read our newest articles on AI, Technology, Education, Programming and more.</p>
+    <!-- Hero -->
+    <section class="hero">
 
-</section>
+        <h2>Latest Blog Articles</h2>
 
-<section class="featured-posts">
+        <p>
+            Read our newest articles on AI, Technology,
+            Programming, Education, Career and much more.
+        </p>
 
-<div class="grid">
+    </section>
 
-<div class="card">
-<h3>🤖 Artificial Intelligence</h3>
-<p>Explore AI tools and tutorials.</p>
-<a href="#">Read Article</a>
-</div>
+    <!-- Search -->
+    <section class="search-section">
 
-<div class="card">
-<h3>💻 Programming</h3>
-<p>Learn HTML, CSS, JavaScript and Python.</p>
-<a href="#">Read Article</a>
-</div>
+        <input
+            type="text"
+            id="searchBox"
+            placeholder="Search Blogs...">
 
-<div class="card">
-<h3>📚 Education</h3>
-<p>Study tips and career guidance.</p>
-<a href="#">Read Article</a>
-</div>
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="AI">AI</option>
+            <option value="Programming">Programming</option>
+            <option value="Technology">Technology</option>
+            <option value="Education">Education</option>
+        </select>
 
-</div>
+    </section>
 
-</section>
+    <!-- Dynamic Blog Container -->
+    <section class="featured-posts">
 
-<footer>
-<p>© 2026 Levin Cross</p>
-</footer>
+        <div id="blogContainer" class="grid">
+
+            <!-- Firebase blogs will load here -->
+
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+
+        <p>© 2026 Levin Cross. All Rights Reserved.</p>
+
+    </footer>
+
+    <!-- Firebase -->
+    <script type="module" src="js/firebase.js"></script>
+
+    <!-- Blog Logic -->
+    <script type="module" src="js/blog.js"></script>
 
 </body>
+
 </html>
