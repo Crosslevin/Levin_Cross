@@ -1,52 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact | Levin Cross</title>
-<link rel="stylesheet" href="css/style.css">
+    <!-- Basic Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Contact | Levin Cross</title>
+    <meta name="description" content="Contact Levin Cross for questions, feedback, collaborations, and support.">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<header>
-<h1>Levin Cross</h1>
+    <!-- Header -->
+    <header>
 
-<nav>
-<a href="index.html">Home</a>
-<a href="blog.html">Blog</a>
-<a href="categories.html">Categories</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-</nav>
+        <div class="logo">
+            <h1>Levin Cross</h1>
+        </div>
 
-</header>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="blog.html">Blog</a>
+            <a href="categories.html">Categories</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
 
-<section class="hero">
+    </header>
 
-<h2>Contact Us</h2>
+    <!-- Contact Section -->
+    <section class="hero">
 
-<p>Have a question or suggestion? We'd love to hear from you.</p>
+        <h2>Contact Us</h2>
 
-<form>
+        <p>
+            Have a question, suggestion, or business inquiry?
+            We'd love to hear from you.
+        </p>
 
-<input type="text" placeholder="Your Name" required><br><br>
+        <form id="contactForm">
 
-<input type="email" placeholder="Your Email" required><br><br>
+            <input
+                type="text"
+                id="name"
+                placeholder="Your Name"
+                required>
 
-<textarea placeholder="Your Message" rows="6"></textarea><br><br>
+            <br><br>
 
-<button type="submit">Send Message</button>
+            <input
+                type="email"
+                id="email"
+                placeholder="Your Email"
+                required>
 
-</form>
+            <br><br>
 
-</section>
+            <input
+                type="text"
+                id="subject"
+                placeholder="Subject">
 
-<footer>
+            <br><br>
 
-<p>© 2026 Levin Cross. All Rights Reserved.</p>
+            <textarea
+                id="message"
+                rows="6"
+                placeholder="Your Message"
+                required>
+            </textarea>
 
-</footer>
+            <br><br>
+
+            <button type="submit">
+                📩 Send Message
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2026 Levin Cross. All Rights Reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/contact.js"></script>
 
 </body>
 </html>
