@@ -974,3 +974,86 @@ onMessage(messaging, (payload) => {
 
 console.log("🔔 Notification System Ready");
 `
+// ==========================================
+// Levin Cross - Part 1D.1
+// Single Blog Loader
+// ==========================================
+
+import { db } from "./firebase.js";
+
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+// Get Blog ID
+const params = new URLSearchParams(window.location.search);
+const blogId = params.get("id");
+
+// Load Blog
+async function loadBlog() {
+
+    if (!blogId) {
+
+        document.getElementById("post").innerHTML =
+            "<h2>Blog not found.</h2>";
+
+        return;
+
+    }
+
+    try {
+
+        const ref = doc(db, "blogs", blogId);
+
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+
+            document.getElementById("post").innerHTML =
+                "<h2>Blog not found.</h2>";
+
+            return;
+
+        }
+
+        const blog = snap.data();
+
+        document.getElementById("post").innerHTML = `
+
+            <h1>${blog.title}</h1>
+
+            ${
+                blog.image
+                    ? `<img src="${blog.image}" class="blog-image" alt="${blog.title}">`
+                    : ""
+            }
+
+            <p><strong>Category:</strong> ${blog.category || "General"}</p>
+
+            <p><strong>Author:</strong> ${blog.author || "Admin"}</p>
+
+            <hr>
+
+            <p>${blog.desc}</p>
+
+        `;
+
+        // Load Comments
+        if (typeof loadComments === "function") {
+            loadComments(blogId);
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("post").innerHTML =
+            "<h2>Error loading blog.</h2>";
+
+    }
+
+}
+
+loadBlog();
+          
