@@ -1,337 +1,641 @@
+// ==========================================
+// Levin Cross - script.js
+// Part 1A.1
+// Imports + Global Variables + Initialization
+// ==========================================
 
+// Firebase Config
 import { auth, db } from "./firebase.js";
-window.filterBlogs = function () {
-  const value = document.getElementById("filter").value;
-  console.log("Filter:", value);
-};
+
+// Firebase Authentication
 import {
   GoogleAuthProvider,
   signInWithPopup,
-  onAuthStateChanged,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
+// Firestore
 import {
   collection,
   addDoc,
+  getDocs,
   onSnapshot,
   deleteDoc,
+  updateDoc,
   doc,
-  updateDoc
+  query,
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-window.likeBlog = async function (id, likes) {
-  const ref = doc(db, "blogs", id);
+// Firebase Cloud Messaging
+import {
+  getMessaging,
+  getToken
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
 
-  await updateDoc(ref, {
-    likes: likes + 1
-  });
-};
+// ==========================================
+// Firebase Objects
+// ==========================================
+
 const provider = new GoogleAuthProvider();
-
-/* ================= NOTIFICATIONS ================= */
-import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-messaging.js";
-
 const messaging = getMessaging();
 
-async function requestNotification() {
-  try {
-    const token = await getToken(messaging, {
-      vapidKey: "YOUR_VAPID_KEY"
-    });
+// ==========================================
+// Admin Email
+// ==========================================
 
-    console.log("Notification Token:", token);
-  } catch (err) {
-    console.log(err);
-  }
+const ADMIN_EMAIL = "crosslevin@gmail.com";
+
+// ==========================================
+// DOM Elements
+// ==========================================
+
+const themeBtn = document.getElementById("themeBtn");
+const searchBox = document.getElementById("searchBox");
+const filter = document.getElementById("filter");
+
+const blogContainer = document.getElementById("blogContainer");
+
+const adminPanel = document.getElementById("adminPanel");
+
+const userSection = document.getElementById("userSection");
+const userName = document.getElementById("userName");
+
+// ==========================================
+// Firestore Collection
+// ==========================================
+
+const blogCollection = collection(db, "blogs");
+
+// ==========================================
+// Global Variables
+// ==========================================
+
+let currentUser = null;
+let allBlogs = [];
+
+// ==========================================
+// App Start
+// ==========================================
+
+console.log("🚀 Levin Cross Started");
+console.log("✅ Firebase Connected");
+// ==========================================
+// Levin Cross - script.js
+// Part 1A.2
+// Theme System
+// ==========================================
+
+// Load saved theme
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme === "light") {
+    document.body.classList.add("light");
 }
 
-requestNotification();
-import { auth, db } from "./firebase.js";
+updateThemeButton();
+
+// Theme Toggle
+if (themeBtn) {
+
+    themeBtn.addEventListener("click", () => {
+
+        document.body.classList.toggle("light");
+
+        const currentTheme =
+            document.body.classList.contains("light")
+                ? "light"
+                : "dark";
+
+        localStorage.setItem("theme", currentTheme);
+
+        updateThemeButton();
+
+    });
+
+}
+
+// Update Button Text
+function updateThemeButton() {
+
+    if (!themeBtn) return;
+
+    if (document.body.classList.contains("light")) {
+
+        themeBtn.innerHTML = "☀️ Light Mode";
+
+    } else {
+
+        themeBtn.innerHTML = "🌙 Dark Mode";
+
+    }
+
+}
+
+// Optional Theme Helper
+window.setTheme = function (theme) {
+
+    if (theme === "light") {
+
+        document.body.classList.add("light");
+
+    } else {
+
+        document.body.classList.remove("light");
+
+    }
+
+    localStorage.setItem("theme", theme);
+
+    updateThemeButton();
+
+};
+
+console.log("🎨 Theme System Loaded");
+// ==========================================
+// Levin Cross - script.js
+// Part 1A.3
+// Google Login & Logout
+// ==========================================
+
+// Google Login
+window.googleLogin = async function () {
+
+    try {
+
+        const result = await signInWithPopup(auth, provider);
+
+        currentUser = result.user;
+
+        console.log("✅ Login Success");
+
+        console.log(currentUser);
+
+        alert(`Welcome ${currentUser.displayName}`);
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Google Login Failed");
+
+    }
+
+};
+
+// Logout
+window.logout = async function () {
+
+    try {
+
+        await signOut(auth);
+
+        currentUser = null;
+
+        console.log("✅ Logout Success");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Logout Failed");
+
+    }
+
+};
+
+// ==========================================
+// Google User Info
+// ==========================================
+
+window.getCurrentUser = function () {
+
+    return currentUser;
+
+};
+
+// ==========================================
+// User Avatar
+// ==========================================
+
+window.getUserPhoto = function () {
+
+    if (!currentUser) return "";
+
+    return currentUser.photoURL || "";
+
+};
+
+// ==========================================
+// User Name
+// ==========================================
+
+window.getUserName = function () {
+
+    if (!currentUser) return "Guest";
+
+    return currentUser.displayName || "Guest";
+
+};
+
+console.log("🔐 Google Authentication Ready");
+// ==========================================
+// Levin Cross - script.js
+// Part 1A.4
+// Authentication State Manager
+// ==========================================
+
+onAuthStateChanged(auth, (user) => {
+
+    currentUser = user;
+
+    if (user) {
+
+        console.log("✅ User Logged In");
+
+        // User Section
+        if (userSection) {
+            userSection.style.display = "block";
+        }
+
+        // User Name
+        if (userName) {
+            userName.textContent =
+                user.displayName || "User";
+        }
+
+        // Google Login Button
+        const loginBtn =
+            document.getElementById("googleLoginBtn");
+
+        if (loginBtn) {
+            loginBtn.style.display = "none";
+        }
+
+        // Admin Panel
+        if (adminPanel) {
+
+            if (user.email === ADMIN_EMAIL) {
+
+                adminPanel.style.display = "block";
+
+                console.log("👑 Admin Login");
+
+            } else {
+
+                adminPanel.style.display = "none";
+
+                console.log("🙋 Normal User");
+
+            }
+
+        }
+
+    } else {
+
+        console.log("❌ User Logged Out");
+
+        currentUser = null;
+
+        if (userSection) {
+            userSection.style.display = "none";
+        }
+
+        if (adminPanel) {
+            adminPanel.style.display = "none";
+        }
+
+        const loginBtn =
+            document.getElementById("googleLoginBtn");
+
+        if (loginBtn) {
+            loginBtn.style.display = "inline-block";
+        }
+
+    }
+
+});
+
+// ==========================================
+// Check Admin
+// ==========================================
+
+window.isAdmin = function () {
+
+    return (
+        currentUser &&
+        currentUser.email === ADMIN_EMAIL
+    );
+
+};
+
+// ==========================================
+// Check Login
+// ==========================================
+
+window.isLoggedIn = function () {
+
+    return currentUser !== null;
+
+};
+
+console.log("🔐 Authentication State Manager Loaded");
+// ==========================================
+// Levin Cross - script.js
+// Part 1B.1
+// Publish Blog System
+// ==========================================
+
+// Publish Blog
+window.publishBlog = async function () {
+
+    // Only admin can publish
+    if (!window.isAdmin()) {
+        alert("Only admin can publish blogs.");
+        return;
+    }
+
+    const title =
+        document.getElementById("blogTitle")?.value.trim();
+
+    const desc =
+        document.getElementById("blogDesc")?.value.trim();
+
+    const image =
+        document.getElementById("blogImage")?.value.trim() || "";
+
+    // Validation
+    if (!title) {
+        alert("Please enter blog title.");
+        return;
+    }
+
+    if (!desc) {
+        alert("Please enter blog description.");
+        return;
+    }
+
+    try {
+
+        await addDoc(blogCollection, {
+
+            title,
+            desc,
+            image,
+
+            likes: 0,
+
+            author: currentUser?.displayName || "Admin",
+            authorEmail: currentUser?.email || "",
+
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+
+        });
+
+        // Clear Form
+        document.getElementById("blogTitle").value = "";
+        document.getElementById("blogDesc").value = "";
+        document.getElementById("blogImage").value = "";
+
+        alert("✅ Blog Published Successfully");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("❌ Failed to publish blog.");
+
+    }
+
+};
+
+// ==========================================
+// Draft Helper
+// ==========================================
+
+window.clearBlogForm = function () {
+
+    document.getElementById("blogTitle").value = "";
+    document.getElementById("blogDesc").value = "";
+    document.getElementById("blogImage").value = "";
+
+};
+
+console.log("📝 Publish Blog System Ready");
+// ==========================================
+// Levin Cross - script.js
+// Part 1B.2
+// Real-Time Blog Display
+// ==========================================
+
+const blogsQuery = query(
+    blogCollection,
+    orderBy("createdAt", "desc")
+);
+
+// Live Listener
+onSnapshot(blogsQuery, (snapshot) => {
+
+    if (!blogContainer) return;
+
+    blogContainer.innerHTML = "";
+
+    allBlogs = [];
+
+    snapshot.forEach((blog) => {
+
+        const data = blog.data();
+
+        allBlogs.push({
+            id: blog.id,
+            ...data
+        });
+
+        const image = data.image
+            ? `<img src="${data.image}" alt="${data.title}" class="blog-image">`
+            : "";
+
+        blogContainer.innerHTML += `
+
+        <div class="card">
+
+            ${image}
+
+            <h3>${data.title}</h3>
+
+            <p>${data.desc}</p>
+
+            <small>
+                ✍️ ${data.author || "Admin"}
+            </small>
+
+            <br><br>
+
+            <button
+                onclick="likeBlog('${blog.id}', ${data.likes || 0})">
+
+                ❤️ ${data.likes || 0}
+
+            </button>
+
+            <a href="post.html?id=${blog.id}">
+                Read Full →
+            </a>
+
+            ${
+                window.isAdmin()
+                    ? `
+                    <br><br>
+
+                    <button onclick="editBlog('${blog.id}')">
+                        ✏️ Edit
+                    </button>
+
+                    <button onclick="deleteBlog('${blog.id}')">
+                        🗑️ Delete
+                    </button>
+                    `
+                    : ""
+            }
+
+        </div>
+
+        `;
+
+    });
+
+    console.log("📚 Blogs Loaded:", allBlogs.length);
+
+}, (error) => {
+
+    console.error(error);
+
+    blogContainer.innerHTML =
+        "<p>❌ Failed to load blogs.</p>";
+
+});
+// ==========================================
+// Levin Cross - Part 1B.3
+// Like System + Search + Filter
+// ==========================================
+
+// Like Blog
+window.likeBlog = async function (id, currentLikes = 0) {
+
+    try {
+
+        await updateDoc(doc(db, "blogs", id), {
+            likes: currentLikes + 1
+        });
+
+    } catch (error) {
+
+        console.error("Like Error:", error);
+
+    }
+
+};
+
+// ==============================
+// Search + Category Filter
+// ==============================
+
+let searchText = "";
+let selectedCategory = "all";
+
+// Search
+if (searchBox) {
+
+    searchBox.addEventListener("input", (e) => {
+
+        searchText = e.target.value.toLowerCase();
+
+        renderBlogs();
+
+    });
+
+}
+
+// Category Filter
 window.filterBlogs = function () {
-  const value = document.getElementById("filter").value;
-  console.log("Filter:", value);
-};
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-import {
-  collection,
-  addDoc,
-  onSnapshot,
-  deleteDoc,
-  doc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    if (!filter) return;
 
-window.likeBlog = async function (id, likes) {
-  const ref = doc(db, "blogs", id);
+    selectedCategory = filter.value;
 
-  await updateDoc(ref, {
-    likes: likes + 1
-  });
-};
-const provider = new GoogleAuthProvider();
+    renderBlogs();
 
-/* ================= THEME ================= */
-const themeBtn = document.getElementById("themeBtn");
-
-if (themeBtn) {
-  themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("light");
-
-    themeBtn.textContent = document.body.classList.contains("light")
-      ? "☀️ Light Mode"
-      : "🌙 Dark Mode";
-  });
-}
-
-/* ================= SEARCH ================= */
-const search = document.getElementById("searchBox");
-
-if (search) {
-  search.addEventListener("keyup", () => {
-    console.log("Searching:", search.value);
-  });
-}
-
-/* ================= LOGIN ================= */
-window.googleLogin = async function () {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (err) {
-    alert(err.message);
-  }
 };
 
-/* ================= LOGOUT ================= */
-window.logout = async function () {
-  await signOut(auth);
-};
+// Render Filtered Blogs
+function renderBlogs() {
 
-/* ================= AUTH STATE ================= */
-const ADMIN_EMAIL = "crosslevin@gmail.com";
+    if (!blogContainer) return;
 
-onAuthStateChanged(auth, (user) => {
-  const adminPanel = document.getElementById("adminPanel");
-  const userSection = document.getElementById("userSection");
-  const userName = document.getElementById("userName");
-
-  if (user) {
-    if (userSection) userSection.style.display = "block";
-    if (userName) userName.textContent = user.displayName;
-
-    // Sirf admin ko admin panel dikhega
-    if (adminPanel) {
-      adminPanel.style.display =
-        user.email === ADMIN_EMAIL ? "block" : "none";
-    }
-  } else {
-    if (userSection) userSection.style.display = "none";
-    if (adminPanel) adminPanel.style.display = "none";
-  }
-});
-
-/* ================= BLOG PUBLISH ================= */
-window.generateAI = async function () {
-  const title = "AI Generated Blog Title " + Date.now();
-  const desc = "This is AI generated content for Levin Cross blog system.";
-
-  await addDoc(collection(db, "blogs"), {
-    title,
-    desc,
-    time: Date.now(),
-    likes: 0
-  });
-
-  alert("AI Blog Created!");
-};
-
-/* ================= BLOG DISPLAY ================= */
-const blogContainer = document.getElementById("blogContainer");
-
-if (blogContainer) {
-  onSnapshot(collection(db, "blogs"), (snapshot) => {
     blogContainer.innerHTML = "";
 
-    snapshot.forEach((item) => {
-      const data = item.data();
-      const id = item.id;
+    const filtered = allBlogs.filter((blog) => {
 
-      blogContainer.innerHTML += `
-  <div class="card">
-    <h3>${data.title}</h3>
-    <p>${data.desc}</p>
+        const matchSearch =
+            blog.title.toLowerCase().includes(searchText) ||
+            blog.desc.toLowerCase().includes(searchText);
 
-    <!-- ❤️ ADD HERE -->
-    <button onclick="likeBlog('${id}', ${data.likes || 0})">
-      ❤️ Like (${data.likes || 0})
-    </button>
+        const matchCategory =
+            selectedCategory === "all" ||
+            blog.category === selectedCategory;
 
-  </div>
-`;
+        return matchSearch && matchCategory;
 
-          <a href="post.html?id=${id}">Read Full →</a>
-
-          <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
-          <button onclick="editBlog('${id}','${data.title}','${data.desc}')">✏️ Edit</button>
-        </div>
-      `;
     });
-  });
-}
 
-/* ================= DELETE ================= */
-window.deleteBlog = async function (id) {
-  if (confirm("Delete this blog?")) {
-    await deleteDoc(doc(db, "blogs", id));
-  }
-};
+    if (filtered.length === 0) {
 
-/* ================= EDIT ================= */
-window.editBlog = async function (id, oldTitle, oldDesc) {
-  const newTitle = prompt("Edit Title", oldTitle);
-  const newDesc = prompt("Edit Description", oldDesc);
+        blogContainer.innerHTML =
+            "<p>No blogs found.</p>";
 
-  if (!newTitle || !newDesc) return;
+        return;
 
-  await updateDoc(doc(db, "blogs", id), {
-    title: newTitle,
-    desc: newDesc
-  });
-
-  alert("Updated!");
-};
-/* ================= THEME ================= */
-const themeBtn = document.getElementById("themeBtn");
-
-if (themeBtn) {
-  themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("light");
-
-    themeBtn.textContent = document.body.classList.contains("light")
-      ? "☀️ Light Mode"
-      : "🌙 Dark Mode";
-  });
-}
-
-/* ================= SEARCH ================= */
-const search = document.getElementById("searchBox");
-
-if (search) {
-  search.addEventListener("keyup", () => {
-    console.log("Searching:", search.value);
-  });
-}
-
-/* ================= LOGIN ================= */
-window.googleLogin = async function () {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (err) {
-    alert(err.message);
-  }
-};
-
-/* ================= LOGOUT ================= */
-window.logout = async function () {
-  await signOut(auth);
-};
-
-/* ================= AUTH STATE ================= */
-const ADMIN_EMAIL = "crosslevin@gmail.com";
-
-onAuthStateChanged(auth, (user) => {
-  const adminPanel = document.getElementById("adminPanel");
-  const userSection = document.getElementById("userSection");
-  const userName = document.getElementById("userName");
-
-  if (user) {
-    if (userSection) userSection.style.display = "block";
-    if (userName) userName.textContent = user.displayName;
-
-    // Sirf admin ko admin panel dikhega
-    if (adminPanel) {
-      adminPanel.style.display =
-        user.email === ADMIN_EMAIL ? "block" : "none";
     }
-  } else {
-    if (userSection) userSection.style.display = "none";
-    if (adminPanel) adminPanel.style.display = "none";
-  }
-});
 
-/* ================= BLOG PUBLISH ================= */
-window.generateAI = async function () {
-  const title = "AI Generated Blog Title " + Date.now();
-  const desc = "This is AI generated content for Levin Cross blog system.";
+    filtered.forEach((blog) => {
 
-  await addDoc(collection(db, "blogs"), {
-    title,
-    desc,
-    time: Date.now(),
-    likes: 0
-  });
+        const image = blog.image
+            ? `<img src="${blog.image}" class="blog-image" alt="${blog.title}">`
+            : "";
 
-  alert("AI Blog Created!");
-};
+        blogContainer.innerHTML += `
 
-/* ================= BLOG DISPLAY ================= */
-const blogContainer = document.getElementById("blogContainer");
+        <div class="card">
 
-if (blogContainer) {
-  onSnapshot(collection(db, "blogs"), (snapshot) => {
-    blogContainer.innerHTML = "";
+            ${image}
 
-    snapshot.forEach((item) => {
-      const data = item.data();
-      const id = item.id;
+            <h3>${blog.title}</h3>
 
-      blogContainer.innerHTML += `
-  <div class="card">
-    <h3>${data.title}</h3>
-    <p>${data.desc}</p>
+            <p>${blog.desc}</p>
 
-    <!-- ❤️ ADD HERE -->
-    <button onclick="likeBlog('${id}', ${data.likes || 0})">
-      ❤️ Like (${data.likes || 0})
-    </button>
+            <small>
+                📂 ${blog.category || "General"}
+            </small>
 
-  </div>
-`;
+            <br><br>
 
-          <a href="post.html?id=${id}">Read Full →</a>
+            <button onclick="likeBlog('${blog.id}', ${blog.likes || 0})">
+                ❤️ ${blog.likes || 0}
+            </button>
 
-          <button onclick="deleteBlog('${id}')">🗑️ Delete</button>
-          <button onclick="editBlog('${id}','${data.title}','${data.desc}')">✏️ Edit</button>
+            <a href="post.html?id=${blog.id}">
+                Read Full →
+            </a>
+
         </div>
-      `;
+
+        `;
+
     });
-  });
+
 }
 
-/* ================= DELETE ================= */
-window.deleteBlog = async function (id) {
-  if (confirm("Delete this blog?")) {
-    await deleteDoc(doc(db, "blogs", id));
-  }
-};
-
-/* ================= EDIT ================= */
-window.editBlog = async function (id, oldTitle, oldDesc) {
-  const newTitle = prompt("Edit Title", oldTitle);
-  const newDesc = prompt("Edit Description", oldDesc);
-
-  if (!newTitle || !newDesc) return;
-
-  await updateDoc(doc(db, "blogs", id), {
-    title: newTitle,
-    desc: newDesc
-  });
-
-  alert("Updated!");
-};
+console.log("🔎 Search & Filter Ready");
