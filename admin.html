@@ -1,85 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
+<h2>📝 Blog Editor</h2>
 
-<head>
+<input
+    type="text"
+    id="blogTitle"
+    placeholder="Blog Title">
 
-    <!-- Basic Meta -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<br><br>
 
-    <!-- SEO -->
-    <title>Admin Dashboard | Levin Cross</title>
-    <meta name="description" content="Levin Cross Admin Dashboard">
+<select id="blogCategory">
+    <option>AI</option>
+    <option>Programming</option>
+    <option>Technology</option>
+    <option>Education</option>
+    <option>Finance</option>
+    <option>Career</option>
+</select>
 
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+<br><br>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">
+<input
+    type="text"
+    id="blogImage"
+    placeholder="Cover Image URL">
 
-</head>
+<br><br>
 
-<body>
+<textarea
+    id="blogContent"
+    rows="18"
+    placeholder="Write your full article here...">
+</textarea>
 
-    <!-- Header -->
-    <header>
+<br><br>
 
-        <h1>🔐 Levin Cross Admin Dashboard</h1>
+<button onclick="publishBlog()">
+    🚀 Publish Blog
+</button>
 
-        <button onclick="window.location.href='index.html'">
-            🏠 Home
-        </button>
+<button onclick="generateAI()">
+    🤖 AI Generate
+</button>
 
-    </header>
-
-    <!-- Admin Info -->
-    <section class="admin-card">
-
-        <h2>Administrator</h2>
-
-        <div id="adminInfo">
-            <p>Loading...</p>
-        </div>
-
-    </section>
-
-    <!-- Dashboard Stats -->
-    <section class="dashboard-grid">
-
-        <div class="card">
-            <h3>Total Blogs</h3>
-            <h1 id="totalBlogs">0</h1>
-        </div>
-
-        <div class="card">
-            <h3>Total Users</h3>
-            <h1 id="totalUsers">0</h1>
-        </div>
-
-        <div class="card">
-            <h3>Status</h3>
-            <p id="status">Loading...</p>
-        </div>
-
-    </section>
-
-    <!-- Quick Actions -->
-    <section>
-
-        <button onclick="window.location.href='index.html#adminPanel'">
-            ➕ Publish New Blog
-        </button>
-
-        <button onclick="window.location.href='blog.html'">
-            📖 View Blogs
-        </button>
-
-    </section>
-
-    <!-- JavaScript -->
-    <script type="module" src="js/admin.js"></script>
-
-</body>
-
-</html>
+<button onclick="clearBlogForm()">
+    🗑 Clear
+</button>
