@@ -67,7 +67,33 @@ const userName = document.getElementById("userName");
 // Firestore Collection
 // ==========================================
 
-const blogCollection = collection(db, "blogs");
+await addDoc(blogCollection, {
+
+    title,
+
+    category,
+
+    image,
+
+    summary: content.substring(0, 180),
+
+    content,
+
+    author: currentUser.displayName,
+
+    authorEmail: currentUser.email,
+
+    likes: 0,
+
+    views: 0,
+
+    status: "published",
+
+    createdAt: serverTimestamp(),
+
+    updatedAt: serverTimestamp()
+
+});
 
 // ==========================================
 // Global Variables
